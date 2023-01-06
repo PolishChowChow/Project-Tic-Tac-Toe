@@ -1,0 +1,44 @@
+:root{
+    --blue: #0081C9;
+    --light-blue: #5BC0F8;
+    --light-light-blue: #86E5FF;
+    --yellow: #FFC93C;
+    --light: #EEE;
+}
+body{
+    font-family: 'Source Sans Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+header{
+    height: 150px;
+    text-align: center;
+    background-color: var(--light);
+    position: relative;
+    z-index: 1;
+    box-shadow: 1px 1px 5px #AAA;
+    color: #222;
+}
+header h1{
+    font-size: 50px;
+}
+main{
+    background-color: var(--light-light-blue);
+    color: black;
+    flex: 1;
+    display: grid;
+    place-content: center;
+}
+footer{
+    height: 80px;
+    background-color: var(--blue);
+    color: white;
+    text-align: centers;
+}
+#copyright{
+    text-align: center;
+    font-size: 24px;
+}
