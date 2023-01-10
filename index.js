@@ -1,3 +1,4 @@
+//Object generating players with stats
 class player{
     constructor(name, sign){
         this.name = name;
@@ -39,12 +40,14 @@ class player{
     }
    
 }
+//global variables used in code
 const reset = document.querySelector("button#reset");
 const start = document.querySelector("button#start");
 const p1 = document.querySelector("section#p1");
 const p2 = document.querySelector("section#p2");
 const player1 = new player("player1","X");
 const player2 = new player("player2","O");
+//function generating nine squares on the board
 function generateBlankBoard(){
     const boardContainer = document.querySelector("section#board");
         for(let i=0;i<9;i++){
@@ -54,52 +57,7 @@ function generateBlankBoard(){
             boardContainer.appendChild(div);
         }
 }
-function checkCombos(array, sign){
-    if(array[0]==sign && array[1]==sign && array[2]==sign){
-        return true;
-    }
-    if(array[3]==sign && array[4]==sign && array[5]==sign){
-        return true;
-    }
-    if(array[6]==sign && array[7]==sign && array[8]==sign){
-        return true;
-    }
-    if(array[0]==sign && array[3]==sign && array[6]==sign){
-        return true;
-    }
-    if(array[1]==sign && array[4]==sign && array[7]==sign){
-        return true;
-    }
-    if(array[2]==sign && array[5]==sign && array[8]==sign){
-        return true;
-    }
-    if(array[0]==sign && array[4]==sign && array[8]==sign){
-        return true;
-    }
-    if(array[2]==sign && array[4]==sign && array[6]==sign){
-        return true;
-    }
-    return false;
-}
-function checkWin(array1, array2){
-    let message = "";
-    if(checkCombos(array1,"X")==true){
-        message = "p1win";
-    }
-    else if(checkCombos(array2,"O")==true){
-        message = "p2win";
-    }
-    else{
-        message = "draw";
-    }
-    return message;
-}
-function updateStatus(){
-    p1.innerHTML = "";
-    p1.innerHTML = player1.getInfo();
-    p2.innerHTML = "";
-    p2.innerHTML = player2.getInfo();
-}
+//game starting function
 function startGame(){
     document.querySelector("section#tellwinner").textContent = "GOOD LUCK!";
     let isX = true;
@@ -112,7 +70,6 @@ function startGame(){
     divs.forEach(element => {
         element.addEventListener("click",function(e){
             if(element.textContent == "" && winner==false){
-                console.log(isX);
                 let status;
                 if(isX){
                     signMark = "X";
@@ -167,10 +124,75 @@ function startGame(){
         });
     });
 }
+
+//checking if player wins
+function checkWin(array1, array2){
+    let message = "";
+    if(checkCombos(array1,"X")==true){
+        message = "p1win";
+    }
+    else if(checkCombos(array2,"O")==true){
+        message = "p2win";
+    }
+    else{
+        message = "draw";
+    }
+    return message;
+}
+function checkCombos(array, sign){
+    if(checkRows(array,sign)){
+        return true;
+    }
+    if(checkColumns(array,sign)){
+        return true;
+    }
+    if(checkDiagonally(array,sign)){
+        return true;
+    }
+}
+function checkRows(arr, sign){
+    let j = 0;
+    for(let i=0;i<3;i++){
+        if(arr[j]==sign && arr[j+1]==sign && arr[j+2]==sign){
+            return true;
+        }
+        j+=3;
+    }
+    return false;
+}
+function checkColumns(arr, sign){
+    for(let i=0;i<3;i++){
+        if(arr[i]==sign && arr[i+3]==sign && arr[i+6]==sign){
+            return true;
+        }
+    }
+    return false;
+}
+function checkDiagonally(arr, sign){
+    if(arr[0]==sign && arr[4]==sign && arr[8]==sign){
+        return true;
+    }
+    if(arr[2]==sign && arr[4]==sign && arr[6]==sign){
+        return true;
+    }
+    return false;
+}
+
+//updating information about players (e.g. if they're winstreaking or not)
+function updateStatus(){
+    p1.innerHTML = "";
+    p1.innerHTML = player1.getInfo();
+    p2.innerHTML = "";
+    p2.innerHTML = player2.getInfo();
+}
+
+//this is for disabling bug when the user clicks starts more than once
 function startPlaying(){
     startGame();
     start.removeEventListener("click",startPlaying);
 }
+
+//It allows user to do rematch
 function resetGame(){
     const divs = document.querySelectorAll("div.square");
     divs.forEach(element => {
@@ -178,14 +200,20 @@ function resetGame(){
     });
     startGame();
 }
-function generateStartInfo(){
-    p1.innerHTML = player1.getInfo();
-    p2.innerHTML = player2.getInfo();
+
+//this generates information about players in aside container
+function generateStartInfo(container, player){
+    container.innerHTML = player.getInfo();
 }
+
+//settings needed to load before game starts
 function loadSettings(){
     generateBlankBoard();
-    generateStartInfo();
+    generateStartInfo(p1,player1);
+    generateStartInfo(p2,player2);
 }
+
+//listeners for the main functions
 start.addEventListener("click",startPlaying);
 reset.addEventListener("click",resetGame);
 window.addEventListener("load",loadSettings);
